@@ -56,6 +56,7 @@ This Wi-Fi board features flash memory to send a request to an external service 
 
 <img style="display: block; margin: auto;" src="images/part-3.jpg"/>
 
+
 **How it might work?**
 1. ESP8266 Setup: When the button is pressed, the ESP8266 sends an HTTP request to an external webhook.
 2. Webhook Service: Use a service like IFTTT, Zapier, or a custom backend (like Firebase Functions) to receive the request.
@@ -72,6 +73,7 @@ Also due to the limitations of GitHub Pages (being static), we can't directly ha
 The use of IFTTT as a bridge should allow us to bypass this limitation by leveraging external services.
 
 
+
 ## Development
 At this stage it was time to get something working. It was clear no amount of Youtube videos was going to make me completely understand how I was going to tackle this project, but I knew that for my first project it wasn't going to be a straight shot.
 For that reason, after walking around JayCar for 30 minutes I changed my mind and ended up purchasing a board that was a more beginner friendly 'all-in-one' - The Arduino UNO R4 WiFi. 
@@ -82,6 +84,7 @@ I opted for this microcontroller over the micro-bit/ESP wifi module as I was wor
 
 
 **Getting Something Working**
+
 The first step was getting the Arduino connected to my wifi. Luckily the Arduino IDE comes with built in examples on how to do this, specific to the board manager installed. After getting an understanding of how it all works I was able to successfully get my R4 online. From here I wanted to try and incorporate a simple webhook that would send me an email when I pressed a button. To do this I used IFTTT.
 
 <img style="display: block; margin: auto;" src="images/webhook.png"/>
@@ -92,3 +95,60 @@ After subscribing to the IFTTT event name and giving the provided key to the Ard
 
 
 **Web App Design**
+
+I wanted the design of my interface to be simple and easy to understand. I setup a html template for flask (which was probably redundant given it's only one page) and started working on a simple prototype. Using javascript I listened for when the spacebar was pressed, that would trigger an animation and sound effect. This was so I could ensure everything looked and felt good before I replaced the user input with a GET request for when I finally get it working.
+
+<img style="display: block; margin: auto;" src="images/Animation.gif"/>
+
+
+**Server Setup**
+
+I lost track of a lot of things I had tried at this point, so I'll just tell you what worked.
+
+As much as I wanted this website to be online I lacked the skills in making the system secure - as I wasn't working in a virtual environment and didn't feel comfortable with what I don't know. Instead I setup a local host using phython/flask and ran it on all network interfaces (hosting on 0.0.0.0), making it accessable via the local IP address and other devices (such as the Arduino). I also found out what Websockets are, which I wish I knew about from the beginning. Once a Websocket connection is established it allows the client continous exchange of messages to the server in real time - which is perfect for my device.
+
+<img style="display: block; margin: auto;" src="images/code1.png"/>
+
+Over to the Arduino IDE, I plugged in the flask server IP and the GET method to trigger the function in the python app code.
+
+<img style="display: block; margin: auto;" src="images/code2.png"/>
+
+
+Sorry for the mess, a lot of the code is still left in from debugging and I'm too scared to touch it. You have no idea how happy I was to see this in the server console:
+
+<img style="display: block; margin: auto;" src="images/working.png"/>
+
+
+**Mo' Features, Mo' Problems**
+
+While the server was reciving the input from the Arduino over wifi, the button animation and sound was not playing on the webpage. This was because I had never actually checked for the trigger in the javascript. All I needed to do was create a Websocket connection to flask and listen for the trigger in order to call the same animation and sound function I had previously tested with the space bar. After doing this the animation worked!
+
+
+But there was a new issue. I was getting an error in the browser console about the sound - aparently the user has to interact with the page when loaded to enable sounds to be played (ie mouse click, button press). I solved this by adding a switch the user has to press before the button is active. Later on I added a popup that displays when the bell is turned off to give the user some direction.
+
+<img style="display: block; margin: auto;" src="images/Animation2.gif"/>
+
+Another probelm with the sound was when using the app on my iPhone. I tried to be smart and use .ogg format for the sounds (to save 10KB??) but turns out the format isn't supported by safari so I just used .mp3 instead.
+
+
+**Putting It All Together**
+
+It was done, the server was running on my local network and I could access it from any device. Here it is in action:
+
+<img style="display: block; margin: auto;" src="images/Animation3.gif"/>
+
+<img style="display: block; margin: auto;" src="images/laptop.png"/>
+
+Unfortunately, due to the size of the microcontroller I had chosen I couldn't fit it into the button I had originally gutted for this project and it was too late into to find or even think about 3D printing a new one. This is dissapointing as it is something that I would love to be using, but being left on the ground, it would only end up as an expensive chew toy for my dog.
+
+<img style="display: block; margin: auto;" src="images/form.png"/>
+
+
+
+**The Future**
+
+I will be continueing this project in my free time - as I come to understand the inner workings of this device and the bare minimum I would need to pull this off again, I am confident I can reduce the footprint of it quite a lot - hopefully enough to fit inside a button with a battery pack. The other issue I mentioned earlier about power usage still looms but if there's anything I've leanrt from this project it's that problems are just stepping stones to understanding and an opportunity for growth.
+
+
+By for now,
+Tom.
