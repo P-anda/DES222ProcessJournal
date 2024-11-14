@@ -70,3 +70,25 @@ I need to experiment with 'sleep' modes to ensure the device is only on when nee
 - Accessibility: The website receiving the notification will need to remain open to ensure the message is received in real-time. 
 Also due to the limitations of GitHub Pages (being static), we can't directly have the ESP8266 communicate with it in real time.
 The use of IFTTT as a bridge should allow us to bypass this limitation by leveraging external services.
+
+
+## Development
+At this stage it was time to get something working. It was clear no amount of Youtube videos was going to make me completely understand how I was going to tackle this project, but I knew that for my first project it wasn't going to be a straight shot.
+For that reason, after walking around JayCar for 30 minutes I changed my mind and ended up purchasing a board that was a more beginner friendly 'all-in-one' - The Arduino UNO R4 WiFi. 
+
+<img style="display: block; margin: auto;" src="images/unowifi.png"/>
+
+I opted for this microcontroller over the micro-bit/ESP wifi module as I was worried about the extra steps in flashing the ESP-01 and programming for it using micro-bit's make code. I had seen a lot of community content online regarding programming in the Arduino IDE and I was a lot more comfortable being able to plug in the R4 and get started straight away. There was a flaw to this decision however, but I'll touch on that later.
+
+
+**Getting Something Working**
+The first step was getting the Arduino connected to my wifi. Luckily the Arduino IDE comes with built in examples on how to do this, specific to the board manager installed. After getting an understanding of how it all works I was able to successfully get my R4 online. From here I wanted to try and incorporate a simple webhook that would send me an email when I pressed a button. To do this I used IFTTT.
+
+<img style="display: block; margin: auto;" src="images/webhook.png"/>
+
+<img style="display: block; margin: auto;" src="images/iftttkey.png"/>
+
+After subscribing to the IFTTT event name and giving the provided key to the Arduino I was able to get this working relitivly easy. At this point I was nieve and thought I could just use this same method for my project, but the more I learnt, the less I knew. Knowing that I had to run my app on a server I delved into flask and hit dead end after dead end trying to get webhooks triggering on my webpage. I decided to take a break and turn my attention to something I'm more confortable with - designing.
+
+
+**Web App Design**
